@@ -11,11 +11,68 @@ const studentIsEnrolled = document.querySelector("#isEnrolled");
 
 let currentStudentId = null;
 
-function getStudents() {
-  fetch(BASE_URL)
-    .then((resp) => resp.json())
-    .then((data) => renderStudents(data))
-    .catch((error) => console.error(error));
+async function getStudents() {
+  try {
+    const data = await fetch(BASE_URL);
+    const resp = await data.json();
+    return renderStudents(resp);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function addStudent(student) {
+  try {
+    const data = await fetch(BASE_URL, {
+      method: "POST",
+      headers: { "Content-type": "application/json; charset=UTF-8" },
+      body: JSON.stringify(student),
+    });
+    return getStudents();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function updateStudent(id, updates) {
+  try {
+    const data = await fetch(`${BASE_URL}/${id}`, {
+      method: "PATCH",
+      headers: { "Content-type": "application/json; charset=UTF-8" },
+      body: JSON.stringify(updates),
+    });
+    return getStudents();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function deleteStudent(id) {
+  try {
+    const data = await fetch(`${BASE_URL}/${id}`, {
+      method: "DELETE",
+    });
+    return getStudents();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function fetchStudent(id) {
+  try {
+    const data = await fetch(`${BASE_URL}/${id}`);
+    const resp = await data.json();
+
+    studentName.value = resp.name;
+    studentAge.value = resp.age;
+    studentCourse.value = resp.course;
+    studentSkills.value = resp.skills;
+    studentEmail.value = resp.email;
+    studentIsEnrolled.value = resp.isEnrolled;
+    currentStudentId = resp.id;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 function renderStudents(students) {
@@ -39,52 +96,6 @@ function renderStudents(students) {
     .join();
   return (renderList.innerHTML = studentList);
 }
-
-function addStudent(student) {
-  fetch(BASE_URL, {
-    method: "POST",
-    headers: { "Content-type": "application/json; charset=UTF-8" },
-    body: JSON.stringify(student),
-  })
-    .then((response) => response.json())
-    .then(() => getStudents())
-    .catch((error) => console.error(error));
-}
-
-function updateStudent(id, updates) {
-  fetch(`${BASE_URL}/${id}`, {
-    method: "PATCH",
-    headers: { "Content-type": "application/json; charset=UTF-8" },
-    body: JSON.stringify(updates),
-  })
-    .then((response) => response.json())
-    .then(() => getStudents())
-    .catch((error) => console.error(error));
-}
-
-function deleteStudent(id) {
-  fetch(`${BASE_URL}/${id}`, {
-    method: "DELETE",
-  })
-    .then((response) => response.json())
-    .then(() => getStudents())
-    .catch((error) => console.error(error));
-}
-
-function fetchStudent(id) {
-  fetch(`${BASE_URL}/${id}`)
-    .then((resp) => resp.json())
-    .then((student) => {
-      studentName.value = student.name;
-      studentAge.value = student.age;
-      studentCourse.value = student.course;
-      studentSkills.value = student.skills;
-      studentEmail.value = student.email;
-      studentIsEnrolled.value = student.isEnrolled;
-      currentStudentId = student.id;
-    });
-}
-
 getBtn.addEventListener("click", getStudents);
 
 form.addEventListener("submit", (e) => {
@@ -115,4 +126,3 @@ renderList.addEventListener("click", (e) => {
     deleteStudent(id);
   }
 });
-
