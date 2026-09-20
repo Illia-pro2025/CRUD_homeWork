@@ -8,8 +8,8 @@
   "homepage": "https://illia-pro2025.github.io/CRUD_homeWork/",
   "scripts": {
     "client": "parcel src/index.html --port 3000",
-    "server": "json-server  --watch student.json --port 1111",
-    "start": "concurrently \"npm run server\" \"npm run client",
+  
+    "start": "concurrently  \"npm run client",
     "build": "parcel build src/index.html ",
     "deploy": "gh-pages -d dist"
   },

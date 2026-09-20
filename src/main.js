@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:1111/students";
+const BASE_URL = "https://6aafacbeee9c55c910bf5fd7.mockapi.io/api/v1/students";
 const renderList = document.querySelector("#list");
 const getBtn = document.querySelector("#get-students-btn");
 const form = document.querySelector("#add-student-form");
